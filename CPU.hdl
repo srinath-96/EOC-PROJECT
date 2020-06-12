@@ -1,0 +1,44 @@
+CHIP CPU {
+
+    IN  inM[16],         
+        instruction[16], 
+        reset;           
+    OUT outM[16],        
+        writeM,          
+        addressM[15],    
+        pc[15];          
+
+    PARTS:
+   
+    Not(in=instruction[15], out=Ainst);//checks whther its A or C instruction
+    Not(in=Ainst, out=Cinst);	
+    Mux16(a=aluOut, b=instruction, sel=Ainst, out=entryMuxOut);
+    Or(a=Ainst, b=instruction[5], out=intoA);
+    ARegister(in=entryMuxOut, load=intoA, out=areg, out[0..14]=addressM);
+
+
+    And(a=Cinst, b=instruction[12], out=AMSwitch);
+    Mux16(a=areg, b=inM, sel=AMSwitch, out=AM);
+
+    And(a=Cinst, b=instruction[4], out=intoD);
+    DRegister(in=aluOut,load=intoD, out=dreg);
+
+    
+    ALU(x=dreg, y=AM, out=aluOut, out=outM,zx=instruction[11],nx=instruction[10],zy=instruction[9],ny=instruction[8],f=instruction[7],no=instruction[6],zr=zero,ng=less);
+
+    //used to write to the memory
+    And(a=Cinst, b=instruction[3], out=writeM);
+
+   
+    And(a=zero, b=instruction[1], out=jeq);    // is zero and jump if zero
+    And(a=less, b=instruction[2], out=jlt);    // is neg and jump if neg
+    Or(a=zero, b=less, out=zeroOrNeg);
+    Not(in=zeroOrNeg, out=positive);            // is positive (not zero and not neg)
+    And(a=positive, b=instruction[0], out=jgt); // is pos and jump if pos
+    Or(a=jeq, b=jlt, out=jle);
+    Or(a=jle, b=jgt, out=jumpToA);              // load PC if cond met and jump if cond
+    And(a=Cinst, b=jumpToA, out=PCload); // Only jump if C instruction
+
+// pc counter for our jump statements
+    PC(in=areg, load=PCload, inc=true, reset=reset, out[0..14]=pc);// notice only 15 bits are given as the output
+}
