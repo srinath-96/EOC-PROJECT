@@ -5,7 +5,7 @@ The following files do the following tasks.
 ## PART 1
 The jack files- The initial jack code we must compile
 VM files-Files converted from jack that we must further convert
-New FOlder(2).ASM file-File required for our project, IT should draw a circle
+  New Folder(2).ASM file-File required for our project, IT should draw a circle
 ## PART 2
 Assembler.py-Assembler that converts asm code to binary format
 ## PART 3
