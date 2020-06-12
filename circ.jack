@@ -1,0 +1,16 @@
+class circ { /** Draws a sample pictue on the screen using lines and circles. */
+   function void draw(int x,int y,int r) {
+      var int dx, dy;
+      var int r_squared;
+      let dy=-r;
+      let r_squared = r*r;
+      while(dy<r)
+      {
+        let dx = Math.sqrt(r_squared-(dy*dy));
+        do Screen.drawLine(x-dx,y+dy,x+dx,y+dy);
+        let dy = dy+1;
+      }
+      return;
+    }    
+
+}
