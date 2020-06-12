@@ -13,6 +13,8 @@ CHIP CPU {
     Not(in=instruction[15], out=Ainst);//checks whther its A or C instruction
     Not(in=Ainst, out=Cinst);	
     Mux16(a=aluOut, b=instruction, sel=Ainst, out=entryMuxOut);
+    
+
     Or(a=Ainst, b=instruction[5], out=intoA);
     ARegister(in=entryMuxOut, load=intoA, out=areg, out[0..14]=addressM);
 
@@ -23,6 +25,7 @@ CHIP CPU {
     And(a=Cinst, b=instruction[4], out=intoD);
     DRegister(in=aluOut,load=intoD, out=dreg);
 
+    
     
     ALU(x=dreg, y=AM, out=aluOut, out=outM,zx=instruction[11],nx=instruction[10],zy=instruction[9],ny=instruction[8],f=instruction[7],no=instruction[6],zr=zero,ng=less);
 
