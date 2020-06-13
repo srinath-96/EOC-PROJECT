@@ -24,9 +24,6 @@ CHIP CPU {
 
     And(a=Cinst, b=instruction[4], out=intoD);
     DRegister(in=aluOut,load=intoD, out=dreg);
-
-    
-    
     ALU(x=dreg, y=AM, out=aluOut, out=outM,zx=instruction[11],nx=instruction[10],zy=instruction[9],ny=instruction[8],f=instruction[7],no=instruction[6],zr=zero,ng=less);
 
     //used to write to the memory
